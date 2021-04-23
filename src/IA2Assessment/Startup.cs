@@ -1,6 +1,8 @@
+using IA2Assessment.Models;
+using IA2Assessment.Models.Views;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,7 +20,13 @@ namespace IA2Assessment
 			IConfigurationBuilder builder = new ConfigurationBuilder()   
 				.AddJsonFile("appsettings.json"); 
 			Configuration = builder.Build();
+			
+			//Setup Mvc
 			services.AddMvc(options => options.EnableEndpointRouting = false);
+			
+			//Add our tuckshop database context
+			services.AddDbContext<TuckshopDbContext>(options =>
+				options.UseMySQL(Configuration["ConnectionStrings:TuckshopConnection"]));
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

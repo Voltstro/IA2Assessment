@@ -1,0 +1,27 @@
+@using System.Globalization
+@using IA2Assessment.Models
+@using IA2Assessment.Models.Views
+@model IA2Assessment.Models.Views.OrdersManageViewModel
+
+<body>
+<h1>Manage</h1>
+<div>
+    <table>
+        <tr>
+            <th>OrderID</th>
+            <th>Order User</th>
+            <th>Order Date</th>
+            <th>Order Time</th>
+        </tr>
+        @foreach (OrdersManageViewModel.OrderView order in Model.OrdersDetails)
+        {
+            <tr>
+                <th>@order.OrderId</th>
+                <th>@order.OrderUser</th>
+                <th>@order.OrderDate.ToString(CultureInfo.CurrentCulture)</th>
+                <th>@order.OrderTime.ToString()</th>
+            </tr>
+        }
+    </table>
+</div>
+</body>
