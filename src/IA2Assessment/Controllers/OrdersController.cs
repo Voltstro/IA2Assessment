@@ -40,12 +40,17 @@ namespace IA2Assessment.Controllers
                 
                 //Get all order details relating to this order
                 
-                OrdersDetail[] orderDetails = context.OrdersDetails.Where(x => x.OrderId == order.OrderId).ToArray();
+                OrdersDetail[] allOrderDetails = context.OrdersDetails.ToArray();
+                OrdersDetail[] orderDetails = allOrderDetails.Where(x => x.OrderId == order.OrderId).ToArray();
+                List<MenuItem> menuItems = new List<MenuItem>();
                 foreach (OrdersDetail orderDetail in orderDetails)
                 {
-                    MenuItem[] items = context.MenuItems.Where(x => x.ItemId == orderDetail.ItemId).ToArray();
-                    orderView.MenuItems = items;
+                    MenuItem[] allItems = context.MenuItems.ToArray();
+                    MenuItem[] items = allItems.Where(x => x.ItemId == orderDetail.ItemId).ToArray();
+                    menuItems.AddRange(items);
                 }
+
+                orderView.MenuItems = menuItems.ToArray();
                 
                 model.OrdersDetails.Add(orderView);
             }

@@ -9,10 +9,10 @@ namespace IA2Assessment.Models.Views
         {
             public int OrderId { get; set; }
             public string OrderUser { get; set; }
-            public MenuItem[] MenuItems { get; set;  }
-            public OrderStatus OrderStatus { get; set;  }
-            public DateTime OrderDate { get; set;  }
-            public TimeSpan OrderTime { get; set;  }
+            public MenuItem[] MenuItems { get; set; }
+            public OrderStatus OrderStatus { get; set; }
+            public DateTime OrderDate { get; set; }
+            public TimeSpan OrderTime { get; set; }
         }
         
         public enum OrderStatus

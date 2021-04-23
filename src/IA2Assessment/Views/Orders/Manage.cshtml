@@ -1,4 +1,5 @@
 @using System.Globalization
+@using System.Text
 @using IA2Assessment.Models
 @using IA2Assessment.Models.Views
 @model IA2Assessment.Models.Views.OrdersManageViewModel
@@ -6,12 +7,14 @@
 <body>
 <h1>Manage</h1>
 <div>
-    <table>
+    <table style="white-space:pre-wrap; word-wrap:break-word">
         <tr>
             <th>OrderID</th>
             <th>Order User</th>
             <th>Order Date</th>
             <th>Order Time</th>
+            <th>Order Status</th>
+            <th>Items</th>
         </tr>
         @foreach (OrdersManageViewModel.OrderView order in Model.OrdersDetails)
         {
@@ -20,6 +23,16 @@
                 <th>@order.OrderUser</th>
                 <th>@order.OrderDate.ToString(CultureInfo.CurrentCulture)</th>
                 <th>@order.OrderTime.ToString()</th>
+                <th>@order.OrderStatus</th>
+                @{
+                    StringBuilder sb = new StringBuilder();
+                    foreach (MenuItem items in order.MenuItems)
+                    {
+                        sb.Append($"{items.ItemName}\n");
+                    }
+                }
+                <th>@sb.ToString()</th>
+                
             </tr>
         }
     </table>
