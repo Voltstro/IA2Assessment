@@ -20,6 +20,7 @@ namespace IA2Assessment.Models
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrdersDetail> OrdersDetails { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserRole> UserRoles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -45,10 +46,16 @@ namespace IA2Assessment.Models
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasKey(e => e.UserLogin)
+                entity.HasKey(e => e.UserId)
                     .HasName("PRIMARY");
             });
 
+            modelBuilder.Entity<UserRole>(entity =>
+            {
+                entity.HasKey(e => e.RoleId)
+                    .HasName("PRIMARY");
+            });
+            
             OnModelCreatingPartial(modelBuilder);
         }
 

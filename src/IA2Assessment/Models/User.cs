@@ -5,23 +5,45 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IA2Assessment.Models
 {
+    [Table("Users")]
     public partial class User
     {
         [Key]
-        [StringLength(256)]
-        public string UserLogin { get; set; }
-        [Required]
-        [StringLength(256)]
-        public string UserPasswordHash { get; set; }
+        public int UserId { get; set; }
+        
         [Required]
         [StringLength(256)]
         public string UserName { get; set; }
+        
         [Required]
-        [StringLength(16)]
-        public string UserLevel { get; set; }
+        [StringLength(128)]
+        public string UserFirstName { get; set; }
+        
+        [Required]
+        [StringLength(128)]
+        public string UserLastName { get; set; }
+        
+        [Required]
+        [StringLength(256)]
+        public string UserPasswordHash { get; set; }
+
         [StringLength(256)]
         public string UserAllergies { get; set; }
+        
         [Column(TypeName = "decimal(10,0)")]
         public decimal? UserPrepaidBalance { get; set; }
+    }
+
+    public enum UserLevel
+    {
+        Admin = 0,
+        TuckshopStaff,
+        Staff,
+        Grade7,
+        Grade8,
+        Grade9,
+        Grade10,
+        Grade11,
+        Grade12,
     }
 }

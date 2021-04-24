@@ -1,7 +1,10 @@
+using System.Threading.Tasks;
+using IA2Assessment.Identity;
 using IA2Assessment.Models;
 using IA2Assessment.Models.Views;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,16 +30,35 @@ namespace IA2Assessment
 			//Add our tuckshop database context
 			services.AddDbContext<TuckshopDbContext>(options =>
 				options.UseMySQL(Configuration["ConnectionStrings:TuckshopConnection"]));
+
+			//Setup our custom identity
+			services.AddIdentity<User, UserRole>()
+				.AddDefaultTokenProviders();
+			services.AddTransient<IUserStore<User>, UserStore>();
+			services.AddTransient<IRoleStore<UserRole>, RoleStore>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TuckshopDbContext dbContext, SignInManager<User> signInManager)
 		{
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
+
+				if (signInManager.UserManager.FindByNameAsync("admin").Result == null)
+				{
+					var result = signInManager.UserManager.CreateAsync(new User
+					{
+						UserName = "admin",
+						UserFirstName = "Admin",
+						UserLastName = "Master"
+					}, "Password.1234").Result;
+					dbContext.SaveChanges();
+				}
 			}
 
+			app.UseAuthentication();
+			app.UseAuthorization();
 			app.UseFileServer(); 
 			app.UseMvc(route =>
 			{
