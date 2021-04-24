@@ -1,0 +1,19 @@
+@model IA2Assessment.Models.Views.AccountLoginViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h1>Login</h1>
+
+<form method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Html.ViewData["ReturnUrl"]">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        Username: <input asp-for="UserName"/>
+        <span asp-validation-for="UserName"></span>
+    </div>
+    <div>
+        Password: <input asp-for="Password" />
+        <span asp-validation-for="Password"></span>
+    </div>
+    <div>
+        <input type="submit" value="Login" />
+    </div>
+</form>

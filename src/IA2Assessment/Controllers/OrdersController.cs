@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using IA2Assessment.Models;
 using IA2Assessment.Models.Views;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IA2Assessment.Controllers
 {
+    [Authorize]
     public class OrdersController : Controller
     {
         private readonly TuckshopDbContext context;

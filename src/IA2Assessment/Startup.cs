@@ -36,6 +36,12 @@ namespace IA2Assessment
 				.AddDefaultTokenProviders();
 			services.AddTransient<IUserStore<User>, UserStore>();
 			services.AddTransient<IRoleStore<UserRole>, RoleStore>();
+			services.ConfigureApplicationCookie(options =>
+			{
+				options.Cookie.HttpOnly = true;
+				options.LoginPath = "/Account/Login";
+				options.LogoutPath = "/Account/Logout";
+			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,7 +64,6 @@ namespace IA2Assessment
 			}
 
 			app.UseAuthentication();
-			app.UseAuthorization();
 			app.UseFileServer(); 
 			app.UseMvc(route =>
 			{
