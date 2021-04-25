@@ -25,6 +25,7 @@ namespace IA2Assessment
 			
 			//Setup Mvc
 			services.AddMvc(options => options.EnableEndpointRouting = false);
+			services.AddWebOptimizer();
 
 			//Setup temp data
 			services.AddSession();
@@ -67,6 +68,8 @@ namespace IA2Assessment
 
 			app.UseSession();
 			app.UseAuthentication();
+			app.UseWebOptimizer();
+			app.UseStaticFiles();
 			app.UseFileServer(); 
 			app.UseMvc(route =>
 			{
