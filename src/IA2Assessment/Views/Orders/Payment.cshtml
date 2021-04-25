@@ -1,0 +1,26 @@
+@using IA2Assessment.Models
+@model IA2Assessment.Models.Views.OrdersPaymentViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewBag.Title = "Payment";
+    Layout = "_Layout";
+}
+
+<table>
+    @foreach (MenuItem item in Model.MenuItems)
+    {
+        <tr>
+            <th>@item.ItemName</th>
+            <th>@item.ItemPrice$</th>
+        </tr>
+    }
+</table>
+<h2>Total Price: @Model.MenuItems.Sum(x => x.ItemPrice)$</h2>
+<div>
+    <form method="post" asp-controller="Orders" asp-action="ConfirmPayment">
+        <input type="submit" value="Confirm">        
+    </form>
+    <form method="post" asp-controller="Orders" asp-action="CancelPayment">
+        <input type="submit" value="Cancel">
+    </form>
+</div>

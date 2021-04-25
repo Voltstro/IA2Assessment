@@ -20,12 +20,18 @@ namespace IA2Assessment.Models
         public TimeSpan OrderTime { get; set; }
         
         [Required]
-        public int OrderStatus { get; set; }
+        public OrderStatus OrderStatus { get; set; }
         
         [Required]
         [ForeignKey(nameof(User))]
         public int OrderUserId { get; set; }
 
         public virtual User User { get; set; }
+    }
+
+    public enum OrderStatus
+    {
+        Outstanding,
+        Completed
     }
 }

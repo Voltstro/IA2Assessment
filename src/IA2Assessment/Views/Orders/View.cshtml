@@ -12,8 +12,12 @@
     {
         <tr>
             <td>@item.ItemName</td>
+            <td>x@(item.ItemBoughtCount)</td>
         </tr>
     }
 </table>
 
-<a asp-action="Index">Back to menu</a>
+<div>
+    <a asp-action="Index">Back to menu</a>
+    <a asp-action="Payment">Confirm Order</a>
+</div>

@@ -21,6 +21,6 @@ namespace IA2Assessment.Models.Views
             Completed = 1
         }
 
-        public List<OrderView> OrdersDetails = new List<OrderView>();
+        public List<OrderView> OrdersDetails { get; set; }= new List<OrderView>();
     }
 }

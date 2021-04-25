@@ -26,5 +26,7 @@ namespace IA2Assessment.Models
         [Required]
         [StringLength(128)]
         public string ItemDisplayUrl { get; set; }
+
+        [NotMapped] public int ItemBoughtCount { get; set; } = 1;
     }
 }

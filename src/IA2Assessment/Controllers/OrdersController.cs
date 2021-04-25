@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using IA2Assessment.Helper;
 using IA2Assessment.Models;
 using IA2Assessment.Models.Views;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IA2Assessment.Controllers
@@ -12,10 +15,12 @@ namespace IA2Assessment.Controllers
     public class OrdersController : Controller
     {
         private readonly TuckshopDbContext context;
+        private readonly UserManager<User> userManager;
         
-        public OrdersController(TuckshopDbContext context)
+        public OrdersController(TuckshopDbContext context, UserManager<User> userManager)
         {
             this.context = context;
+            this.userManager = userManager;
         }
         
         [HttpGet]
@@ -27,13 +32,74 @@ namespace IA2Assessment.Controllers
             return View("Index");
         }
         
-        public IActionResult View(OrdersNewOrderModel model)
+        [HttpGet]
+        public new IActionResult View()
         {
-            ViewBag.Order = HttpContext.Session.GetObjectFromJson<List<MenuItem>>("Order");
-            return View("View", model);
+            List<MenuItem> order = HttpContext.Session.GetObjectFromJson<List<MenuItem>>("Order");
+            if (order == null || order.Count == 0)
+                return RedirectToAction("Index");
+
+            ViewBag.Order = order;
+            
+            return View("View");
+        }
+
+        [HttpGet]
+        public IActionResult Payment()
+        {
+            List<MenuItem> order = HttpContext.Session.GetObjectFromJson<List<MenuItem>>("Order");
+            if (order == null || order.Count == 0)
+                return RedirectToAction("Index");
+            
+            return View("Payment", new OrdersPaymentViewModel
+            {
+                MenuItems = order.ToArray()
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmPayment()
+        {
+            List<MenuItem> orderItems = HttpContext.Session.GetObjectFromJson<List<MenuItem>>("Order");
+            if (orderItems == null || orderItems.Count == 0)
+                return RedirectToAction("Index");
+
+            User user = await userManager.GetUserAsync(User);
+            
+            Order order = new Order
+            {
+                OrderDate = DateTime.Now,
+                OrderTime = DateTime.Now.TimeOfDay,
+                OrderStatus = OrderStatus.Outstanding,
+                User = user
+            };
+            context.Attach(order);
+            
+            foreach (MenuItem orderItem in orderItems)
+            {
+                OrdersDetail ordersDetail = new OrdersDetail
+                {
+                    Order = order,
+                    MenuItem = orderItem,
+                    ItemQuantity = orderItem.ItemBoughtCount
+                };
+                context.Attach(ordersDetail);
+            }
+
+            context.SaveChanges();
+            
+            HttpContext.Session.Remove("Order");
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult CancelPayment()
+        {
+            return RedirectToAction("View");
         }
         
-        [Route("Add/{id:int}")]
+        [HttpGet]
+        [Route("Order/Add/{id:int}")]
         public IActionResult Add(int id)
         {
             MenuItem item = context.MenuItems.FirstOrDefault(x => x.ItemId == id);
@@ -48,13 +114,25 @@ namespace IA2Assessment.Controllers
             else
             {
                 List<MenuItem> order = HttpContext.Session.GetObjectFromJson<List<MenuItem>>("Order");
-                order.Add(item);
+               
+                //Check to see if the item already exists
+                MenuItem existingItem = order.FirstOrDefault(x => x.ItemId == item.ItemId);
+                if (existingItem == null)
+                {
+                    order.Add(item);
+                }
+                else
+                {
+                    existingItem.ItemBoughtCount++;
+                }
+
                 HttpContext.Session.SetObjectAsJson("Order", order);
             }
 
             return RedirectToAction("View");
         }
 
+        [HttpGet]
         public IActionResult Manage()
         {
             OrdersManageViewModel model = new OrdersManageViewModel();
