@@ -89,13 +89,19 @@ namespace IA2Assessment.Controllers
             context.SaveChanges();
             
             HttpContext.Session.Remove("Order");
-            return RedirectToAction("Index");
+            return RedirectToAction("Confirmed");
         }
 
         [HttpPost]
         public IActionResult CancelPayment()
         {
             return RedirectToAction("View");
+        }
+
+        [HttpGet]
+        public IActionResult Confirmed()
+        {
+            return View("Confirmed");
         }
         
         [HttpGet]
