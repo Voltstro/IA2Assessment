@@ -14,7 +14,7 @@
         <tr>
             <td><img style="width: 50%;" src="images/products/@(item.ItemDisplayUrl)" alt="@item.ItemId"></td>
             <td><h2>@item.ItemName</h2></td>
-            <td>@(item.ItemPrice)$</td>
+            <td>$@(item.ItemPrice)</td>
             <td><a asp-controller="Orders" asp-action="Add" asp-route-id="@item.ItemId">Add</a></td>
         </tr>
     }

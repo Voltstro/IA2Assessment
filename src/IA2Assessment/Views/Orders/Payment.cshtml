@@ -6,16 +6,17 @@
     Layout = "_Layout";
 }
 
-<table>
+<table style="white-space:pre-wrap; word-wrap:break-word">
     @foreach (MenuItem item in Model.MenuItems)
     {
         <tr>
             <th>@item.ItemName</th>
-            <th>@item.ItemPrice$</th>
+            <th><h4>Quanity:</h4><p>@item.ItemBoughtCount</p></th>
+            <th><h4>Price:</h4><p>$@item.ItemPrice</p></th>
         </tr>
     }
 </table>
-<h2>Total Price: @Model.MenuItems.Sum(x => x.ItemPrice)$</h2>
+<h2>Total Price: $@Model.MenuItems.Sum(x => x.ItemPrice * x.ItemBoughtCount)</h2>
 <div>
     <form method="post" asp-controller="Orders" asp-action="ConfirmPayment">
         <input type="submit" value="Confirm">        
