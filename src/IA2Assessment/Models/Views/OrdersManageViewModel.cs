@@ -8,7 +8,7 @@ namespace IA2Assessment.Models.Views
         public class OrderView
         {
             public int OrderId { get; set; }
-            public string OrderUser { get; set; }
+            public int OrderUserId { get; set; }
             public MenuItem[] MenuItems { get; set; }
             public OrderStatus OrderStatus { get; set; }
             public DateTime OrderDate { get; set; }

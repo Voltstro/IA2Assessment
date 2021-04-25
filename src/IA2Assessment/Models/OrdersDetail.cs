@@ -12,10 +12,18 @@ namespace IA2Assessment.Models
         [Key]
         [Column("OrderDetailID")]
         public int OrderDetailId { get; set; }
+        
         [Column("OrderID")]
+        [ForeignKey(nameof(Order))]
         public int OrderId { get; set; }
+        
         [Column("ItemID")]
+        [ForeignKey(nameof(MenuItem))]
         public int ItemId { get; set; }
+        
         public int ItemQuantity { get; set; }
+        
+        public virtual Order Order { get; set; }
+        public virtual MenuItem MenuItem { get; set; }
     }
 }

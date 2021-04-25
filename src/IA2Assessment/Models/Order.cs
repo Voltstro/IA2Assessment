@@ -11,12 +11,21 @@ namespace IA2Assessment.Models
         [Key]
         [Column("OrderID")]
         public int OrderId { get; set; }
+        
+        [Required]
         [Column(TypeName = "date")]
         public DateTime OrderDate { get; set; }
-        public TimeSpan OrderTime { get; set; }
-        public int OrderStatus { get; set; }
+        
         [Required]
-        [StringLength(256)]
-        public string OrderUser { get; set; }
+        public TimeSpan OrderTime { get; set; }
+        
+        [Required]
+        public int OrderStatus { get; set; }
+        
+        [Required]
+        [ForeignKey(nameof(User))]
+        public int OrderUserId { get; set; }
+
+        public virtual User User { get; set; }
     }
 }

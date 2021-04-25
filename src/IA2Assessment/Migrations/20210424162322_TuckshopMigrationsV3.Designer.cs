@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IA2Assessment.Migrations
 {
     [DbContext(typeof(TuckshopDbContext))]
-    [Migration("20210424114052_TuckshopMigrationsV1")]
-    partial class TuckshopMigrationsV1
+    [Migration("20210424162322_TuckshopMigrationsV3")]
+    partial class TuckshopMigrationsV3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -69,12 +69,12 @@ namespace IA2Assessment.Migrations
                     b.Property<TimeSpan>("OrderTime")
                         .HasColumnType("time");
 
-                    b.Property<string>("OrderUser")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
+                    b.Property<int>("OrderUserId")
+                        .HasColumnType("int");
 
                     b.HasKey("OrderId");
+
+                    b.HasIndex("OrderUserId");
 
                     b.ToTable("Orders");
                 });
@@ -99,6 +99,10 @@ namespace IA2Assessment.Migrations
 
                     b.HasKey("OrderDetailId")
                         .HasName("PRIMARY");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("OrderId");
 
                     b.HasIndex(new[] { "OrderDetailId" }, "OrderDetailID")
                         .IsUnique();
@@ -131,8 +135,15 @@ namespace IA2Assessment.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
 
-                    b.Property<int>("UserLevel")
-                        .HasColumnType("int");
+                    b.Property<string>("UserFirstName")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
+
+                    b.Property<string>("UserLastName")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -170,6 +181,36 @@ namespace IA2Assessment.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRoles");
+                });
+
+            modelBuilder.Entity("IA2Assessment.Models.Order", b =>
+                {
+                    b.HasOne("IA2Assessment.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("OrderUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("IA2Assessment.Models.OrdersDetail", b =>
+                {
+                    b.HasOne("IA2Assessment.Models.MenuItem", "MenuItem")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IA2Assessment.Models.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MenuItem");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("IA2Assessment.Models.UserRole", b =>

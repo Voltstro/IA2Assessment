@@ -67,12 +67,12 @@ namespace IA2Assessment.Migrations
                     b.Property<TimeSpan>("OrderTime")
                         .HasColumnType("time");
 
-                    b.Property<string>("OrderUser")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
+                    b.Property<int>("OrderUserId")
+                        .HasColumnType("int");
 
                     b.HasKey("OrderId");
+
+                    b.HasIndex("OrderUserId");
 
                     b.ToTable("Orders");
                 });
@@ -97,6 +97,10 @@ namespace IA2Assessment.Migrations
 
                     b.HasKey("OrderDetailId")
                         .HasName("PRIMARY");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("OrderId");
 
                     b.HasIndex(new[] { "OrderDetailId" }, "OrderDetailID")
                         .IsUnique();
@@ -175,6 +179,36 @@ namespace IA2Assessment.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRoles");
+                });
+
+            modelBuilder.Entity("IA2Assessment.Models.Order", b =>
+                {
+                    b.HasOne("IA2Assessment.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("OrderUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("IA2Assessment.Models.OrdersDetail", b =>
+                {
+                    b.HasOne("IA2Assessment.Models.MenuItem", "MenuItem")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IA2Assessment.Models.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MenuItem");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("IA2Assessment.Models.UserRole", b =>

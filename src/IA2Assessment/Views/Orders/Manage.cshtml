@@ -1,3 +1,4 @@
+@page
 @using System.Globalization
 @using System.Text
 @using IA2Assessment.Models
@@ -24,7 +25,7 @@
         {
             <tr>
                 <th>@order.OrderId</th>
-                <th>@order.OrderUser</th>
+                <th>@order.OrderUserId</th>
                 <th>@order.OrderDate.ToString(CultureInfo.CurrentCulture)</th>
                 <th>@order.OrderTime.ToString()</th>
                 <th>@order.OrderStatus</th>

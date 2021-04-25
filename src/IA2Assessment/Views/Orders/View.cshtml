@@ -1,0 +1,19 @@
+@using IA2Assessment.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewBag.Title = "View Order";
+    Layout = "_Layout";
+}
+
+<h2>View Order</h2>
+
+<table>
+    @foreach (MenuItem item in ViewBag.Order)
+    {
+        <tr>
+            <td>@item.ItemName</td>
+        </tr>
+    }
+</table>
+
+<a asp-action="Index">Back to menu</a>

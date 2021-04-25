@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using IA2Assessment.Helper;
 using IA2Assessment.Models;
 using IA2Assessment.Models.Views;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace IA2Assessment.Controllers
 {
@@ -19,9 +18,41 @@ namespace IA2Assessment.Controllers
             this.context = context;
         }
         
+        [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            MenuItem[] menuItems = context.MenuItems.ToArray();
+            ViewBag.Order = HttpContext.Session.GetObjectFromJson<List<MenuItem>>("Order");
+            ViewBag.MenuItems = menuItems;
+            return View("Index");
+        }
+        
+        public IActionResult View(OrdersNewOrderModel model)
+        {
+            ViewBag.Order = HttpContext.Session.GetObjectFromJson<List<MenuItem>>("Order");
+            return View("View", model);
+        }
+        
+        [Route("Add/{id:int}")]
+        public IActionResult Add(int id)
+        {
+            MenuItem item = context.MenuItems.FirstOrDefault(x => x.ItemId == id);
+            if (item == null)
+                return RedirectToAction("View");
+            
+            if (HttpContext.Session.GetObjectFromJson<List<MenuItem>>("Order") == null)
+            {
+                List<MenuItem> order = new List<MenuItem> {item};
+                HttpContext.Session.SetObjectAsJson("Order", order);
+            }
+            else
+            {
+                List<MenuItem> order = HttpContext.Session.GetObjectFromJson<List<MenuItem>>("Order");
+                order.Add(item);
+                HttpContext.Session.SetObjectAsJson("Order", order);
+            }
+
+            return RedirectToAction("View");
         }
 
         public IActionResult Manage()
@@ -34,14 +65,13 @@ namespace IA2Assessment.Controllers
                 OrdersManageViewModel.OrderView orderView = new OrdersManageViewModel.OrderView
                 {
                     OrderId = order.OrderId,
-                    OrderUser = order.OrderUser,
+                    OrderUserId = order.OrderId,
                     OrderDate = order.OrderDate,
                     OrderTime = order.OrderTime,
                     OrderStatus = (OrdersManageViewModel.OrderStatus) order.OrderStatus
                 };
                 
                 //Get all order details relating to this order
-                
                 OrdersDetail[] allOrderDetails = context.OrdersDetails.ToArray();
                 OrdersDetail[] orderDetails = allOrderDetails.Where(x => x.OrderId == order.OrderId).ToArray();
                 List<MenuItem> menuItems = new List<MenuItem>();

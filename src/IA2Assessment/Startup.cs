@@ -1,10 +1,9 @@
-using System.Threading.Tasks;
 using IA2Assessment.Identity;
 using IA2Assessment.Models;
-using IA2Assessment.Models.Views;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,7 +25,10 @@ namespace IA2Assessment
 			
 			//Setup Mvc
 			services.AddMvc(options => options.EnableEndpointRouting = false);
-			
+
+			//Setup temp data
+			services.AddSession();
+
 			//Add our tuckshop database context
 			services.AddDbContext<TuckshopDbContext>(options =>
 				options.UseMySQL(Configuration["ConnectionStrings:TuckshopConnection"]));
@@ -53,7 +55,7 @@ namespace IA2Assessment
 
 				if (signInManager.UserManager.FindByNameAsync("admin").Result == null)
 				{
-					var result = signInManager.UserManager.CreateAsync(new User
+					IdentityResult result = signInManager.UserManager.CreateAsync(new User
 					{
 						UserName = "admin",
 						UserFirstName = "Admin",
@@ -63,6 +65,7 @@ namespace IA2Assessment
 				}
 			}
 
+			app.UseSession();
 			app.UseAuthentication();
 			app.UseFileServer(); 
 			app.UseMvc(route =>
