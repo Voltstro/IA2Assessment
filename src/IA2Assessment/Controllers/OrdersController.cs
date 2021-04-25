@@ -36,11 +36,7 @@ namespace IA2Assessment.Controllers
         public new IActionResult View()
         {
             List<MenuItem> order = HttpContext.Session.GetObjectFromJson<List<MenuItem>>("Order");
-            if (order == null || order.Count == 0)
-                return RedirectToAction("Index");
-
             ViewBag.Order = order;
-            
             return View("View");
         }
 

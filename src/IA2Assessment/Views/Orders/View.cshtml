@@ -6,18 +6,28 @@
 }
 
 <h2>View Order</h2>
-
-<table>
-    @foreach (MenuItem item in ViewBag.Order)
+@if (ViewBag.Order == null || ViewBag.Order.Count == 0)
     {
-        <tr>
-            <td>@item.ItemName</td>
-            <td>x@(item.ItemBoughtCount)</td>
-        </tr>
+        <p>You have no items in your order!</p>
     }
-</table>
+    else
+    {
+        <table>
+        @foreach (MenuItem item in ViewBag.Order)
+        {
+            
+            <tr>
+                <td>@item.ItemName</td>
+                <td>x@(item.ItemBoughtCount)</td>
+            </tr>
+        }
+        </table>
+    }
 
 <div>
     <a asp-action="Index">Back to menu</a>
-    <a asp-action="Payment">Confirm Order</a>
+    @if (ViewBag.Order != null && ViewBag.Order.Count != 0)
+    {
+        <a asp-action="Payment">Confirm Order</a>
+    }
 </div>
