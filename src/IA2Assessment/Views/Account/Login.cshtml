@@ -2,25 +2,28 @@
 @{
     ViewBag.Title = "Login";
 }
+@section Head {
+    <link rel="stylesheet" href="~/css/login.css">
+}
 
-<h1>Login</h1>
-
-<form method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Html.ViewData["ReturnUrl"]">
-    <div asp-validation-summary="ModelOnly"></div>
-    <div>
-        Username: <input asp-for="UserName"/>
-        <span asp-validation-for="UserName"></span>
-    </div>
-    <div>
-        Password: <input asp-for="Password" />
-        <span asp-validation-for="Password"></span>
-    </div>
-    <div>
-        <label asp-for = "RememberMe"></label> 
-        <input asp-for = "RememberMe" /> 
-        <span asp-validation-for = "RememberMe"></span> 
-    </div>
-    <div>
-        <input type="submit" value="Login" />
-    </div>
-</form>
+<div class="text-center login">
+    <h2>Login</h2>
+    <form class="form-signin" method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Html.ViewData["ReturnUrl"]">
+        <div class="form-floating">
+            <input id="userNameInput" type="Username" class="form-control" placeholder="User" asp-for="UserName"/>
+            <label for="userNameInput" asp-for="UserName"></label>
+            <span class="text-danger" asp-validation-for="UserName"></span>
+        </div>
+        <div class="form-floating">
+            <input id="passwordInput" type="Password" class="form-control" placeholder="Password" asp-for="Password"/>
+            <label for="passwordInput" asp-for="Password"></label>
+            <span class="text-danger" asp-validation-for="Password"></span>
+        </div>
+        <div class="checkbox mb-3">
+            <input asp-for="RememberMe">
+            <label asp-for="RememberMe"></label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit" value="Login">Login</button>
+        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+    </form>
+</div>

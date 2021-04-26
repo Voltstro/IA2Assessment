@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="~/lib/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/fonts/fonts.css">
     <link rel="stylesheet" href="~/css/styles.css">
+    @RenderSection("Head", required: false)
 </head>
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
@@ -35,9 +36,7 @@
     </div>
 </nav>
 <main class="container bg-light p-5 mt-4">
-    <div class="">
-        @RenderBody()
-    </div>
+    @RenderBody()
 </main>
 <script src="~/lib/js/bootstrap.bundle.min.js"></script>
 </body>
