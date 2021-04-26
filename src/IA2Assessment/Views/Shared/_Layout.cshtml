@@ -1,9 +1,10 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, WebOptimizer.Core
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>@ViewBag.Title - Tuckshop</title>
-    <link rel="stylesheet" href="~/lib/css/bootstrap.css">
+    <link rel="stylesheet" href="~/lib/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/fonts/fonts.css">
     <link rel="stylesheet" href="~/css/styles.css">
 </head>
@@ -40,6 +41,6 @@
         @RenderBody()
     </div>
 </main>
-<script src="~/lib/js/bootstrap.js"></script>
+<script src="~/lib/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

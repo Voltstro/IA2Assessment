@@ -3,7 +3,6 @@ using IA2Assessment.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,7 +24,14 @@ namespace IA2Assessment
 			
 			//Setup Mvc
 			services.AddMvc(options => options.EnableEndpointRouting = false);
-			services.AddWebOptimizer();
+			
+			//Setup Web Optimizer
+			services.AddWebOptimizer(pipeline =>
+			{
+				pipeline.MinifyJsFiles("js/*.js");
+				pipeline.MinifyCssFiles("css/*.css");
+				pipeline.MinifyHtmlFiles();
+			});
 
 			//Setup temp data
 			services.AddSession();
@@ -56,7 +62,7 @@ namespace IA2Assessment
 
 				if (signInManager.UserManager.FindByNameAsync("admin").Result == null)
 				{
-					IdentityResult result = signInManager.UserManager.CreateAsync(new User
+					IdentityResult _ = signInManager.UserManager.CreateAsync(new User
 					{
 						UserName = "admin",
 						UserFirstName = "Admin",
