@@ -1,18 +1,28 @@
 @{
     ViewBag.Title = "Order";
+    int rowCount = 0;
 }
 
-<h2>Menu</h2>
-
-<a asp-action="View">View Order</a>
-<table style="border: 1px black">
-    @foreach (MenuItem item in ViewBag.MenuItems)
-    {
-        <tr>
-            <td><img style="width: 50%;" src="images/products/@(item.ItemDisplayUrl)" alt="@item.ItemId"></td>
-            <td><h2>@item.ItemName</h2></td>
-            <td>$@(item.ItemPrice)</td>
-            <td><a asp-controller="Orders" asp-action="Add" asp-route-id="@item.ItemId">Add</a></td>
-        </tr>
-    }
-</table>
+<div class="pt-4">
+    <h2>Menu</h2>
+    <p class="lead">Select the items that you want to add to your order.</p>
+    
+    <a class="btn btn-primary btn-lg lead" asp-action="View">View Order</a>
+    
+    <div class="row mx-auto">
+        @foreach (MenuItem item in ViewBag.MenuItems)
+        {
+            if (rowCount == 3)
+            {
+                rowCount = 0;
+                <div class="w-100 pd-5"></div>
+            }
+    
+            <a asp-controller="Orders" asp-action="Add" asp-route-id="@item.ItemId" class="col-md card shadow-sm text-reset text-center text-decoration-none p-1 m-3" style="max-width: 330px;">
+                <img class="rounded mx-auto mb-3 d-block" style="width: 50%" src="~/images/products/@item.ItemDisplayUrl" alt="@item.ItemName"/>
+                <h4>@item.ItemName</h4>
+            </a>
+            rowCount++;
+        }
+    </div>
+</div>
