@@ -2,4 +2,25 @@
     ViewBag.Title = "Home";
 }
 
-<h1>Welcome!</h1>
+<div class="px-4 py-5 my-5 text-center">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <h1 class="display-5 fw-bold">Welcome, @(User.Identity.Name)!</h1>
+        <div class="col-lg-6 mx-auto">
+            <p class="lead mb-4">Ready to create an order for today?</p>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <a class="btn btn-primary btn-lg" asp-action="Index" asp-controller="Orders">Create Order</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <h1 class="display-5 fw-bold">Welcome!</h1>
+        <div class="col-lg-6 mx-auto">
+            <p class="lead mb-4">Sign in first to start creating an order!</p>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <a class="btn btn-primary btn-lg" asp-action="Login" asp-controller="Account">Login</a>
+            </div>
+        </div>
+    }
+</div>
