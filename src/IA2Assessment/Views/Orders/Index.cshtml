@@ -21,6 +21,7 @@
             <a asp-controller="Orders" asp-action="Add" asp-route-id="@item.ItemId" class="col-md card shadow-sm text-reset text-center text-decoration-none p-1 m-3" style="max-width: 330px;">
                 <img class="rounded mx-auto mb-3 d-block" style="width: 50%" src="~/images/products/@item.ItemDisplayUrl" alt="@item.ItemName"/>
                 <h4>@item.ItemName</h4>
+                <p class="bi bi-plus-circle"></p>
             </a>
             rowCount++;
         }
