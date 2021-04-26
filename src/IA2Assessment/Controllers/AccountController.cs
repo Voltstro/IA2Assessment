@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using IA2Assessment.Models;
 using IA2Assessment.Models.Views;
@@ -16,7 +15,9 @@ namespace IA2Assessment.Controllers
         {
             this.signInManager = signInManager;
         }
-        
+
+        #region Login
+
         [HttpGet]
         public IActionResult Login(string returnUrl = "")
         {
@@ -47,5 +48,20 @@ namespace IA2Assessment.Controllers
             ModelState.AddModelError("", "Invalid login attempt!");
             return View();
         }
+        
+        #endregion
+
+        #region Logout
+        
+        [HttpGet]
+        public IActionResult Signout()
+        {
+            if (signInManager.IsSignedIn(User))
+                signInManager.SignOutAsync();
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        #endregion
     }
 }
