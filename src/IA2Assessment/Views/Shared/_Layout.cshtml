@@ -1,3 +1,4 @@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +8,38 @@
     <link rel="stylesheet" href="~/css/styles.css">
 </head>
 <body>
-<div>
-    @RenderBody()
-</div>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" asp-action="Index" asp-controller="Home">Tuckshop</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link" asp-action="Index" asp-controller="Home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-action="Index" asp-controller="Orders">Order</a>
+                </li>
+            </ul>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <span class="navbar-text pe-3">Welcome, @(User.Identity.Name)!</span>
+                <a class="btn btn-secondary" asp-action="Signout" asp-controller="Account">Sign Out</a>
+            }
+            else
+            {
+                <a class="btn btn-secondary" asp-action="Login" asp-controller="Account">Login</a>
+            }
+        </div>
+    </div>
+</nav>
+<main class="container bg-light p-5 mt-4">
+    <div class="">
+        @RenderBody()
+    </div>
+</main>
+<script src="~/lib/js/bootstrap.js"></script>
 </body>
 </html>
