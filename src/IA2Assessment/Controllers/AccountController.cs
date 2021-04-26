@@ -32,7 +32,7 @@ namespace IA2Assessment.Controllers
         {
             if (ModelState.IsValid)
             {
-                SignInResult result = await signInManager.PasswordSignInAsync(accountLoginViewModel.UserName, accountLoginViewModel.Password, false, false);
+                SignInResult result = await signInManager.PasswordSignInAsync(accountLoginViewModel.UserName, accountLoginViewModel.Password, accountLoginViewModel.RememberMe, false);
                 if (result.Succeeded)
                 {
                     if (!string.IsNullOrEmpty(accountLoginViewModel.ReturnUrl) &&
