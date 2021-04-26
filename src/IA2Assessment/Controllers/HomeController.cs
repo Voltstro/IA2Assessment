@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IA2Assessment.Controllers
 {
+	/// <summary>
+	///		<see cref="Controller"/> for home
+	/// </summary>
 	public class HomeController : Controller
 	{
 		public IActionResult Index()

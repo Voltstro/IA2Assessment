@@ -7,11 +7,19 @@ using IA2Assessment.Models;
 
 namespace IA2Assessment.Identity
 {
-    public class UserStore : IUserStore<User>, IUserPasswordStore<User>
+    /// <summary>
+    ///     <see cref="IUserStore{TUser}"/> for <see cref="User"/>
+    /// </summary>
+    public sealed class UserStore : IUserPasswordStore<User>
     {
         public UserStore(TuckshopDbContext context)
         {
             this.context = context;
+        }
+
+        ~UserStore()
+        {
+            Dispose(true);
         }
         
         private readonly TuckshopDbContext context;
@@ -21,8 +29,8 @@ namespace IA2Assessment.Identity
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        
-        protected virtual void Dispose(bool disposing)
+
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {
@@ -30,11 +38,23 @@ namespace IA2Assessment.Identity
             }
         }
 
+        /// <summary>
+        ///     Gets the id from <see cref="User"/>
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken)
         {
             return Task.FromResult(user.UserId.ToString());
         }
  
+        /// <summary>
+        ///     Gets the username from <see cref="User"/>
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken)
         {
             return Task.FromResult(user.UserName);
@@ -55,6 +75,12 @@ namespace IA2Assessment.Identity
             return Task.FromResult((object) null);
         }
  
+        /// <summary>
+        ///     Creates a new <see cref="User"/>
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
         {
             context.Add(user);
@@ -69,6 +95,12 @@ namespace IA2Assessment.Identity
             throw new NotImplementedException(nameof(UpdateAsync));
         }
  
+        /// <summary>
+        ///     Deletes a <see cref="User"/>
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
         {
             context.Remove(user);
@@ -78,6 +110,12 @@ namespace IA2Assessment.Identity
             return await Task.FromResult(i == 1 ? IdentityResult.Success : IdentityResult.Failed());
         }
  
+        /// <summary>
+        ///     Finds a <see cref="User"/> from an ID
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
             if (int.TryParse(userId, out int id))
@@ -90,13 +128,26 @@ namespace IA2Assessment.Identity
             }
         }
  
-        public async Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        /// <summary>
+        ///     Gets a <see cref="User"/> from a user name
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<User> FindByNameAsync(string userName, CancellationToken cancellationToken)
         {
             return await context.Users
                            .AsAsyncEnumerable()
-                           .SingleOrDefaultAsync(p => p.UserName.Equals(normalizedUserName, StringComparison.OrdinalIgnoreCase), cancellationToken);
+                           .SingleOrDefaultAsync(p => p.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase), cancellationToken);
         }
  
+        /// <summary>
+        ///     Sets a <see cref="User"/> password
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="passwordHash"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public Task SetPasswordHashAsync(User user, string passwordHash, CancellationToken cancellationToken)
         {
             user.UserPasswordHash = passwordHash;
@@ -104,11 +155,23 @@ namespace IA2Assessment.Identity
             return Task.FromResult((object) null);
         }
  
+        /// <summary>
+        ///     Gets a password hash from a <see cref="User"/>
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public Task<string> GetPasswordHashAsync(User user, CancellationToken cancellationToken)
         {
             return Task.FromResult(user.UserPasswordHash);
         }
  
+        /// <summary>
+        ///     Checks if a <see cref="User"/> has a password
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken)
         {
             return Task.FromResult(!string.IsNullOrWhiteSpace(user.UserPasswordHash));

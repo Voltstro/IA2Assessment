@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace IA2Assessment
 {
+	/// <summary>
+	///		Class for setting our ASP.NET Core app
+	/// </summary>
 	public class Startup
 	{
 		private IConfiguration Configuration { get; set; }
@@ -18,6 +21,7 @@ namespace IA2Assessment
 		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 		public void ConfigureServices(IServiceCollection services)
 		{
+			//Setup our configuration
 			IConfigurationBuilder builder = new ConfigurationBuilder()   
 				.AddJsonFile("appsettings.json"); 
 			Configuration = builder.Build();
@@ -56,6 +60,7 @@ namespace IA2Assessment
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TuckshopDbContext dbContext, SignInManager<User> signInManager)
 		{
+			//If we are in a development environment, enable the exception page
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
@@ -72,6 +77,7 @@ namespace IA2Assessment
 				}
 			}
 
+			//Configure our app
 			app.UseSession();
 			app.UseAuthentication();
 			app.UseWebOptimizer();

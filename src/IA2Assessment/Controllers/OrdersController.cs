@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IA2Assessment.Controllers
 {
+    /// <summary>
+    ///     <see cref="Controller"/> for orders
+    /// </summary>
     [Authorize]
     public class OrdersController : Controller
     {
@@ -23,15 +26,24 @@ namespace IA2Assessment.Controllers
             this.userManager = userManager;
         }
         
+        /// <summary>
+        ///     Gets the main index page
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Index()
         {
+            //Get all the menu items from the database
             MenuItem[] menuItems = context.MenuItems.ToArray();
             ViewBag.Order = HttpContext.Session.GetObjectFromJson<List<MenuItem>>("Order");
             ViewBag.MenuItems = menuItems;
             return View("Index");
         }
         
+        /// <summary>
+        ///     Gets the view order page
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public new IActionResult View()
         {
@@ -39,7 +51,56 @@ namespace IA2Assessment.Controllers
             ViewBag.Order = order;
             return View("View");
         }
+        
+        /// <summary>
+        ///     Adds an <see cref="MenuItem"/> to the order
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("Order/Add/{id:int}")]
+        public IActionResult Add(int id)
+        {
+            //Get the MenuItem from our database
+            MenuItem item = context.MenuItems.FirstOrDefault(x => x.ItemId == id);
+            
+            //Invalid ID
+            if (item == null)
+                return RedirectToAction("View");
+            
+            //Get the Order from the session
+            if (HttpContext.Session.GetObjectFromJson<List<MenuItem>>("Order") == null)
+            {
+                //The Order doesn't exist, so we will create it
+                List<MenuItem> order = new List<MenuItem> {item};
+                HttpContext.Session.SetObjectAsJson("Order", order);
+            }
+            else
+            {
+                //It exists, get the list
+                List<MenuItem> order = HttpContext.Session.GetObjectFromJson<List<MenuItem>>("Order");
+               
+                //Check to see if the item already exists
+                MenuItem existingItem = order.FirstOrDefault(x => x.ItemId == item.ItemId);
+                
+                //The item doesn't exist, add it
+                if (existingItem == null)
+                    order.Add(item);
+                else //It does exist, increase how many times we have bought it
+                    existingItem.ItemBoughtCount++;
 
+                HttpContext.Session.SetObjectAsJson("Order", order);
+            }
+
+            return RedirectToAction("View");
+        }
+
+        #region Payment
+
+        /// <summary>
+        ///     Gets the payment view
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Payment()
         {
@@ -53,6 +114,10 @@ namespace IA2Assessment.Controllers
             });
         }
 
+        /// <summary>
+        ///     Gets the confirm payment view
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> ConfirmPayment()
         {
@@ -88,52 +153,32 @@ namespace IA2Assessment.Controllers
             return RedirectToAction("Confirmed");
         }
 
+        /// <summary>
+        ///     Redirects to the View view
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult CancelPayment()
         {
             return RedirectToAction("View");
         }
 
+        /// <summary>
+        ///     Gets the Confirmed payment view
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Confirmed()
         {
             return View("Confirmed");
         }
         
-        [HttpGet]
-        [Route("Order/Add/{id:int}")]
-        public IActionResult Add(int id)
-        {
-            MenuItem item = context.MenuItems.FirstOrDefault(x => x.ItemId == id);
-            if (item == null)
-                return RedirectToAction("View");
-            
-            if (HttpContext.Session.GetObjectFromJson<List<MenuItem>>("Order") == null)
-            {
-                List<MenuItem> order = new List<MenuItem> {item};
-                HttpContext.Session.SetObjectAsJson("Order", order);
-            }
-            else
-            {
-                List<MenuItem> order = HttpContext.Session.GetObjectFromJson<List<MenuItem>>("Order");
-               
-                //Check to see if the item already exists
-                MenuItem existingItem = order.FirstOrDefault(x => x.ItemId == item.ItemId);
-                if (existingItem == null)
-                {
-                    order.Add(item);
-                }
-                else
-                {
-                    existingItem.ItemBoughtCount++;
-                }
+        #endregion
 
-                HttpContext.Session.SetObjectAsJson("Order", order);
-            }
-
-            return RedirectToAction("View");
-        }
-
+        /// <summary>
+        ///     Gets the manage orders view
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Manage()
         {

@@ -7,6 +7,9 @@ using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace IA2Assessment.Controllers
 {
+    /// <summary>
+    ///     <see cref="Controller"/> for accounts
+    /// </summary>
     public class AccountController : Controller
     {
         private readonly SignInManager<User> signInManager;
@@ -18,6 +21,11 @@ namespace IA2Assessment.Controllers
 
         #region Login
 
+        /// <summary>
+        ///     Gets the login view
+        /// </summary>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Login(string returnUrl = "")
         {
@@ -27,24 +35,32 @@ namespace IA2Assessment.Controllers
             });
         }
 
+        /// <summary>
+        ///     Starts the login process
+        /// </summary>
+        /// <param name="accountLoginViewModel"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult> Login(AccountLoginViewModel accountLoginViewModel)
         {
             if (ModelState.IsValid)
             {
+                //Try to sign in with our sign in manager
                 SignInResult result = await signInManager.PasswordSignInAsync(accountLoginViewModel.UserName, accountLoginViewModel.Password, accountLoginViewModel.RememberMe, false);
                 if (result.Succeeded)
                 {
+                    //If we have a return url, go to it
                     if (!string.IsNullOrEmpty(accountLoginViewModel.ReturnUrl) &&
                         Url.IsLocalUrl(accountLoginViewModel.ReturnUrl))
                     {
                         return Redirect(accountLoginViewModel.ReturnUrl);
                     }
 
-                    return RedirectToAction("Manage", "Orders");
+                    return RedirectToAction("Index", "Orders");
                 }
             }
             
+            //We fail to login in
             ModelState.AddModelError("", "Invalid login attempt!");
             return View();
         }
@@ -53,6 +69,10 @@ namespace IA2Assessment.Controllers
 
         #region Logout
         
+        /// <summary>
+        ///     Starts the log out process
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Signout()
         {
