@@ -95,6 +95,34 @@ namespace IA2Assessment.Controllers
             return RedirectToAction("View");
         }
 
+        /// <summary>
+        ///     Removes an <see cref="Order"/> from the order
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("Order/Remove/{id:int}")]
+        public IActionResult Remove(int id)
+        {
+	        if (HttpContext.Session.GetObjectFromJson<List<MenuItem>>("Order") != null)
+	        {
+		        List<MenuItem> order = HttpContext.Session.GetObjectFromJson<List<MenuItem>>("Order");
+                
+                MenuItem item = order.Find(x => x.ItemId == id);
+		        if (item != null)
+		        {
+			        if (item.ItemBoughtCount == 1)
+				        order.Remove(item);
+			        else
+				        item.ItemBoughtCount--;
+		        }
+
+                HttpContext.Session.SetObjectAsJson("Order", order);
+	        }
+
+	        return RedirectToAction("View");
+        }
+
         #region Payment
 
         /// <summary>
