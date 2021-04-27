@@ -1,19 +1,35 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Events;
 
 namespace IA2Assessment
 {
 	public class Program
 	{
-		public static void Main(string[] args)
+		public static int Main(string[] args)
 		{
-			CreateHostBuilder(args).Build().Run();
+			Log.Logger = new LoggerConfiguration()
+				.MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+				.Enrich.FromLogContext()
+				.WriteTo.Console()
+				.CreateLogger();
+			Log.Information("Starting host...");
+			try
+			{
+				CreateHostBuilder(args).UseSerilog().Build().Run();
+				return 0;
+			}
+			catch (Exception ex)
+			{
+				Log.Fatal(ex, "Host terminated unexpectedly!");
+				return 1;
+			}
+			finally
+			{
+				Log.CloseAndFlush();
+			}
 		}
 
 		public static IHostBuilder CreateHostBuilder(string[] args) =>
