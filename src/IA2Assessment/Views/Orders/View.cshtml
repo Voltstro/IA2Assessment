@@ -14,11 +14,11 @@
 
 @if (ViewBag.Order == null || ViewBag.Order.Count == 0)
 {
-    <p>You have no items in your order!</p>
+    <p class="lead">You have no items in your order!</p>
 }
 else
 {
-    <table class="table">
+    <table class="table shadow-sm bg-white rounded">
         <thead>
         <tr>
             <td>Item</td>

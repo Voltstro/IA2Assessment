@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="~/css/styles.css">
     @RenderSection("Head", required: false)
 </head>
-<body>
+<body class="bg-light">
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <div class="container">
         <a class="navbar-brand" asp-action="Index" asp-controller="Home">Tuckshop</a>
@@ -36,7 +36,7 @@
         </div>
     </div>
 </nav>
-<main class="container bg-light p-5 mt-4">
+<main class="container p-5 mt-4">
     @RenderBody()
 </main>
 <script src="~/lib/js/bootstrap.bundle.min.js"></script>
