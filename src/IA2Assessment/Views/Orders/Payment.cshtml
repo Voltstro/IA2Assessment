@@ -3,22 +3,39 @@
     ViewBag.Title = "Payment";
 }
 
-<table style="white-space:pre-wrap; word-wrap:break-word">
-    @foreach (MenuItem item in Model.MenuItems)
-    {
-        <tr>
-            <th>@item.ItemName</th>
-            <th><h4>Quantity:</h4><p>@item.ItemBoughtCount</p></th>
-            <th><h4>Price:</h4><p>$@item.ItemPrice</p></th>
-        </tr>
-    }
-</table>
-<h2>Total Price: $@Model.MenuItems.Sum(x => x.ItemPrice * x.ItemBoughtCount)</h2>
-<div>
-    <form method="post" asp-controller="Orders" asp-action="ConfirmPayment">
-        <input type="submit" value="Confirm">        
-    </form>
-    <form method="post" asp-controller="Orders" asp-action="CancelPayment">
-        <input type="submit" value="Cancel">
-    </form>
+<div class="pt-4 row g-5">
+    <div class="col-md-5 col-lg-4 order-md-last">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-primary">Your Order</span>
+            <span class="badge bg-primary rounded-pill"></span>
+        </h4>
+        <ul class="list-group mb-3">
+            @foreach (MenuItem item in Model.MenuItems)
+            {
+                <li class="list-group-item d-flex justify-content-between lh-sm">
+                    <div>
+                        <h6 class="my-0">@item.ItemName</h6>
+                        <small class="text-muted">x @item.ItemBoughtCount</small>
+                    </div>
+                    <span class="text-muted">$@(item.ItemPrice * item.ItemBoughtCount)</span>
+                </li>
+            }
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Total</span>
+                <strong>$@Model.MenuItems.Sum(x => x.ItemPrice * x.ItemBoughtCount)</strong>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-7 col-lg-8">
+        <h2 class="mb-3">Payment</h2>
+        <p class="lead">Payment system is not implemented!</p>
+        <div class="btn-group" role="group" aria-label="Buttons">
+            <form method="post" asp-controller="Orders" asp-action="ConfirmPayment">
+                <button class="btn btn-primary" type="submit" value="Confirm">Confirm</button>
+            </form>
+            <form method="post" asp-controller="Orders" asp-action="CancelPayment">
+                <button class="btn btn-secondary" type="submit" value="Cancel">Cancel</button>
+            </form>
+        </div>
+    </div>
 </div>
