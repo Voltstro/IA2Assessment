@@ -1,10 +1,12 @@
-﻿using IA2Assessment.Models.Views;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
 namespace IA2Assessment.Models
 {
+    /// <summary>
+    ///     Handles connection to the tuckshop database
+    /// </summary>
     public partial class TuckshopDbContext : DbContext
     {
         public TuckshopDbContext()
@@ -16,14 +18,34 @@ namespace IA2Assessment.Models
         {
         }
 
+        /// <summary>
+        ///     MenuItems table
+        /// </summary>
         public virtual DbSet<MenuItem> MenuItems { get; set; }
+        
+        /// <summary>
+        ///     Orders table
+        /// </summary>
         public virtual DbSet<Order> Orders { get; set; }
+        
+        /// <summary>
+        ///     OrdersDetails table
+        /// </summary>
         public virtual DbSet<OrdersDetail> OrdersDetails { get; set; }
+        
+        /// <summary>
+        ///     Users table
+        /// </summary>
         public virtual DbSet<User> Users { get; set; }
+        
+        /// <summary>
+        ///     UserRoles table
+        /// </summary>
         public virtual DbSet<UserRole> UserRoles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            //If we are not configured then connect to the database
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseMySQL("Name=ConnectionStrings:TuckshopConnection");
@@ -32,6 +54,7 @@ namespace IA2Assessment.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Configure primary keys
             modelBuilder.Entity<MenuItem>(entity =>
             {
                 entity.HasKey(e => e.ItemId)
