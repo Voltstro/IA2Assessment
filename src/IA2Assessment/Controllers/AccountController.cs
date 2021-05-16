@@ -56,7 +56,7 @@ namespace IA2Assessment.Controllers
                         return Redirect(accountLoginViewModel.ReturnUrl);
                     }
 
-                    return RedirectToAction("Index", "Orders");
+                    return RedirectToAction("Index", "Home");
                 }
             }
             
